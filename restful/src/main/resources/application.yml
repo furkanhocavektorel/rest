@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5432/postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+
+benim-configim:
+  secret-key: be688838ca8686e5c90689bf2ab585cef1137c999b48c70b92f67a5c34dc15697b5d11c982ed6d71be1e1e7f7b4e0733884aa97c3f7a339a8ed03577cf74be09

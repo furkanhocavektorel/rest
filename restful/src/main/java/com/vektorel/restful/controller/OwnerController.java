@@ -1,0 +1,58 @@
+package com.vektorel.restful.controller;
+
+import com.vektorel.restful.dto.request.GetOwnerByIdRequestDto;
+import com.vektorel.restful.dto.request.LoginRequestDto;
+import com.vektorel.restful.dto.request.SaveOwnerRequestDto;
+import com.vektorel.restful.dto.response.BaseResponseDto;
+import com.vektorel.restful.dto.response.GetAllOwnerResponseDto;
+import com.vektorel.restful.dto.response.LoginResponseDto;
+import com.vektorel.restful.dto.response.OwnerResponseDto;
+import com.vektorel.restful.entity.Owner;
+import com.vektorel.restful.service.OwnerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/owner")
+public class OwnerController {
+    @Autowired
+    private OwnerService ownerService;
+
+    @PostMapping("/save")
+    public void save(@RequestBody SaveOwnerRequestDto dto){
+        ownerService.save(dto);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Owner>> getOwner(){
+        return ResponseEntity.ok(ownerService.getAll());
+    }
+
+
+    @PostMapping("/getownerbyid")
+    public ResponseEntity<OwnerResponseDto> getOwnerById(GetOwnerByIdRequestDto dto){
+        return ResponseEntity.ok(ownerService.findById(dto));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto){
+        return ResponseEntity.ok(ownerService.login(dto));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
