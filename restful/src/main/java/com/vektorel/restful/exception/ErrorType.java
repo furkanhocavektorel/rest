@@ -13,7 +13,12 @@ public enum ErrorType {
     PASSWORD_NOT_MATCH(15003,"Password not match"),
 
     // NOT FOUND
-    OWNER_NOT_FOUND_EXCEPTION(15002,"Owner Not Found");
+    TOKEN_NOT_EMPTY(16001,"Token not empty"),
+    OWNER_NOT_FOUND_EXCEPTION(15002,"Owner Not Found"),
+
+
+    // WRONG
+    WROND_TOKEN(16002,"Wrong token");
 
 
 

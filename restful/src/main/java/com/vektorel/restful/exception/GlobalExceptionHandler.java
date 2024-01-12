@@ -1,9 +1,6 @@
 package com.vektorel.restful.exception;
 
-import com.vektorel.restful.exception.custom.EmailAlreadyExistsException;
-import com.vektorel.restful.exception.custom.EmailLoginException;
-import com.vektorel.restful.exception.custom.OwnerNotFoundException;
-import com.vektorel.restful.exception.custom.PasswordLoginException;
+import com.vektorel.restful.exception.custom.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +48,29 @@ public class GlobalExceptionHandler {
                 ,HttpStatus.BAD_REQUEST);
 
     }
+    @ExceptionHandler(TokenNotEmptyException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> tokenNotEmpty(TokenNotEmptyException ex){
+        return new ResponseEntity<>(
+                createMessage(ErrorType.TOKEN_NOT_EMPTY)
+                ,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongTokenException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> wrongTokenException(WrongTokenException ex){
+
+        return new ResponseEntity<>(
+                createMessage(ErrorType.WROND_TOKEN)
+                ,HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
+
+
+
 
 
 

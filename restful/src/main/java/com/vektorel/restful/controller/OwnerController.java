@@ -27,9 +27,12 @@ public class OwnerController {
         ownerService.save(dto);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<Owner>> getOwner(){
-        return ResponseEntity.ok(ownerService.getAll());
+    /*
+    2_ token talebi
+     */
+    @GetMapping("/getAll/{token}")
+    public ResponseEntity<List<GetAllOwnerResponseDto>> getOwner(@PathVariable String token,@RequestParam String asd){
+        return ResponseEntity.ok(ownerService.getAll(token));
     }
 
 

@@ -3,17 +3,16 @@ package com.vektorel.restful.service;
 import com.vektorel.restful.dto.request.GetOwnerByIdRequestDto;
 import com.vektorel.restful.dto.request.LoginRequestDto;
 import com.vektorel.restful.dto.request.SaveOwnerRequestDto;
+import com.vektorel.restful.dto.response.GetAllOwnerResponseDto;
 import com.vektorel.restful.dto.response.LoginResponseDto;
 import com.vektorel.restful.dto.response.OwnerResponseDto;
 import com.vektorel.restful.entity.Owner;
-import com.vektorel.restful.exception.custom.EmailAlreadyExistsException;
-import com.vektorel.restful.exception.custom.EmailLoginException;
-import com.vektorel.restful.exception.custom.OwnerNotFoundException;
-import com.vektorel.restful.exception.custom.PasswordLoginException;
+import com.vektorel.restful.exception.custom.*;
 import com.vektorel.restful.repository.IOwnerRepository;
 import com.vektorel.restful.util.JsonTokenManager;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +34,6 @@ public class OwnerService  {
         }
 
 
-
-
-
         Owner owner=Owner.builder()
                 .name(dto.getName())
                 .surname(dto.getSurname())
@@ -50,8 +46,33 @@ public class OwnerService  {
 
     }
 
-    public List<Owner> getAll() {
-        return repository.findAll();
+    public List<GetAllOwnerResponseDto> getAll(String token) {
+        if (token.isBlank()) throw new TokenNotEmptyException();
+
+       Optional<Long> ownerId= jsonTokenManager.getIdByToken(token);
+
+       if (ownerId==null) throw new WrongTokenException();
+
+
+
+        List<GetAllOwnerResponseDto> responseDtos = new ArrayList<>();
+        for (Owner o: repository.findAll()){
+
+            GetAllOwnerResponseDto responseDto= GetAllOwnerResponseDto.builder()
+                            .email(o.getEmail())
+                            .surname(o.getSurname())
+                            .name(o.getName())
+                            .message("ok")
+                            .statusCode(200)
+                            .build();
+
+            responseDtos.add(responseDto);
+        }
+
+
+
+
+        return responseDtos;
     }
 
 
