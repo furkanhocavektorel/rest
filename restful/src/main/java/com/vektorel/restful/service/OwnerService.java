@@ -1,5 +1,6 @@
 package com.vektorel.restful.service;
 
+import com.vektorel.restful.converter.OwnerConverter;
 import com.vektorel.restful.dto.request.GetOwnerByIdRequestDto;
 import com.vektorel.restful.dto.request.LoginRequestDto;
 import com.vektorel.restful.dto.request.SaveOwnerRequestDto;
@@ -21,11 +22,13 @@ public class OwnerService  {
     private  final IOwnerRepository repository;
     private final PostService postService;
     private final JsonTokenManager jsonTokenManager;
+    public final OwnerConverter ownerConverter;
 
-    public OwnerService(IOwnerRepository repository, PostService postService, JsonTokenManager jsonTokenManager){
+    public OwnerService(IOwnerRepository repository, PostService postService, JsonTokenManager jsonTokenManager, OwnerConverter ownerConverter){
         this.repository=repository;
         this.postService = postService;
         this.jsonTokenManager = jsonTokenManager;
+        this.ownerConverter = ownerConverter;
     }
     public void save  (SaveOwnerRequestDto dto){
 
@@ -34,12 +37,7 @@ public class OwnerService  {
         }
 
 
-        Owner owner=Owner.builder()
-                .name(dto.getName())
-                .surname(dto.getSurname())
-                .email(dto.getEmail())
-                .password(dto.getPassword())
-                .build();
+        Owner owner=ownerConverter.toOwner(dto);
 
     repository.save(owner);
 
