@@ -36,6 +36,7 @@ public class OwnerController {
         return ResponseEntity.ok(ownerService.getAll(token));
     }
 
+    public void deneme(){}
     @PostMapping("/getownerbyid")
     public ResponseEntity<OwnerResponseDto> getOwnerById(GetOwnerByIdRequestDto dto){
         return ResponseEntity.ok(ownerService.findById(dto));
