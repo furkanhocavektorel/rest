@@ -15,7 +15,6 @@ import java.util.OptionalInt;
 @Service
 public class JsonTokenManager {
 
-
     @Value("${benim-configim.secret-key}")
     String secretKey;
     public Optional<String> createToken(Long id){
