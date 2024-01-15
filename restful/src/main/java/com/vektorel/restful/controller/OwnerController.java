@@ -21,7 +21,6 @@ import java.util.List;
 public class OwnerController {
     @Autowired
     private OwnerService ownerService;
-
     @PostMapping("/save")
     public void save(@RequestBody SaveOwnerRequestDto dto){
         ownerService.save(dto);
@@ -34,13 +33,11 @@ public class OwnerController {
     public ResponseEntity<List<GetAllOwnerResponseDto>> getOwner(@PathVariable String token,@RequestParam String asd){
         return ResponseEntity.ok(ownerService.getAll(token));
     }
-
-
+    public void deneme(){}
     @PostMapping("/getownerbyid")
     public ResponseEntity<OwnerResponseDto> getOwnerById(GetOwnerByIdRequestDto dto){
         return ResponseEntity.ok(ownerService.findById(dto));
     }
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto){
         return ResponseEntity.ok(ownerService.login(dto));
