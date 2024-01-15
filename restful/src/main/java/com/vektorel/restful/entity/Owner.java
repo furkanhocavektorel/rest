@@ -8,13 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-public class Owner {
+public class Owner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

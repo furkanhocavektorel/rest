@@ -10,6 +10,7 @@ import com.vektorel.restful.entity.Owner;
 import com.vektorel.restful.exception.custom.*;
 import com.vektorel.restful.repository.IOwnerRepository;
 import com.vektorel.restful.util.JsonTokenManager;
+import com.vektorel.restful.util.ServiceManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,32 +18,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OwnerService  {
-    private  final IOwnerRepository repository;
+public class OwnerService extends ServiceManager<Owner,Long> {
+    private  final IOwnerRepository ownerRepository;
     private final PostService postService;
     private final JsonTokenManager jsonTokenManager;
 
     public OwnerService(IOwnerRepository repository, PostService postService, JsonTokenManager jsonTokenManager){
-        this.repository=repository;
+        super(repository);
+        this.ownerRepository=repository;
         this.postService = postService;
         this.jsonTokenManager = jsonTokenManager;
     }
-    public void save  (SaveOwnerRequestDto dto){
-
-        if (repository.existsByEmail(dto.getEmail())){
+    public void save (SaveOwnerRequestDto dto){
+        if (ownerRepository.existsByEmail(dto.getEmail())){
             throw new EmailAlreadyExistsException("kullanici maili kayitli");
         }
-
-
         Owner owner=Owner.builder()
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .email(dto.getEmail())
                 .password(dto.getPassword())
+
                 .build();
 
-    repository.save(owner);
-
+        save(owner);
 
     }
 
