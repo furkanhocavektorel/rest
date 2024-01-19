@@ -6,6 +6,11 @@ import com.vektorel.restful.dto.response.PostResponseDto;
 import com.vektorel.restful.entity.Post;
 import com.vektorel.restful.repository.IPostRepository;
 import com.vektorel.restful.util.JsonTokenManager;
+import org.hibernate.query.Page;
+import org.hibernate.query.SortDirection;
+import org.springdoc.core.converters.models.Pageable;
+import org.springdoc.core.converters.models.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,6 +54,7 @@ public class PostService {
     }
 
     public List<PostResponseDto> getAllPostByOwnerId(Long ownerId){
+
         List<Post> posts= repository.findByOwnerId(ownerId);
         List<PostResponseDto> responseDtos=new ArrayList<>();
         PostResponseDto postResponseDto= new PostResponseDto();

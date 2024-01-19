@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 80
 
 spring:
   datasource:
@@ -11,6 +11,13 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
+
+
+springdoc:
+  swagger-ui:
+    path: /aaaa
+
+
 
 benim-configim:
   secret-key: be688838ca8686e5c90689bf2ab585cef1137c999b48c70b92f67a5c34dc15697b5d11c982ed6d71be1e1e7f7b4e0733884aa97c3f7a339a8ed03577cf74be09

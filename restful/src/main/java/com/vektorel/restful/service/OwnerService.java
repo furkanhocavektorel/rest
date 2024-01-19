@@ -2,14 +2,19 @@ package com.vektorel.restful.service;
 
 import com.vektorel.restful.dto.request.GetOwnerByIdRequestDto;
 import com.vektorel.restful.dto.request.LoginRequestDto;
+import com.vektorel.restful.dto.request.OwnerUpdateRequestDto;
 import com.vektorel.restful.dto.request.SaveOwnerRequestDto;
+import com.vektorel.restful.dto.response.BaseResponseDto;
 import com.vektorel.restful.dto.response.GetAllOwnerResponseDto;
 import com.vektorel.restful.dto.response.LoginResponseDto;
 import com.vektorel.restful.dto.response.OwnerResponseDto;
 import com.vektorel.restful.entity.Owner;
+import com.vektorel.restful.entity.enums.Role;
 import com.vektorel.restful.exception.custom.*;
 import com.vektorel.restful.repository.IOwnerRepository;
 import com.vektorel.restful.util.JsonTokenManager;
+import com.vektorel.restful.util.ServiceManager;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,31 +22,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OwnerService  {
+public class OwnerService extends ServiceManager<Owner,Long> {
     private  final IOwnerRepository repository;
     private final PostService postService;
     private final JsonTokenManager jsonTokenManager;
 
     public OwnerService(IOwnerRepository repository, PostService postService, JsonTokenManager jsonTokenManager){
+        super(repository);
         this.repository=repository;
         this.postService = postService;
         this.jsonTokenManager = jsonTokenManager;
     }
-    public void save  (SaveOwnerRequestDto dto){
-
+    public void ownerSave (SaveOwnerRequestDto dto){
         if (repository.existsByEmail(dto.getEmail())){
             throw new EmailAlreadyExistsException("kullanici maili kayitli");
         }
-
-
         Owner owner=Owner.builder()
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .email(dto.getEmail())
                 .password(dto.getPassword())
+                .role(Role.MANAGER)
                 .build();
 
-    repository.save(owner);
+    save(owner);
 
 
     }
@@ -75,8 +79,6 @@ public class OwnerService  {
         return responseDtos;
     }
 
-
-
     public OwnerResponseDto findById(GetOwnerByIdRequestDto dto) {
         Optional<Owner> owner=repository.findById(dto.getId());
 
@@ -92,10 +94,6 @@ public class OwnerService  {
                 .build();
 
     }
-
-
-
-
 
     public LoginResponseDto login(LoginRequestDto dto) {
 
@@ -117,6 +115,39 @@ public class OwnerService  {
                 .statusCode(2001)
                 .token(token.get())
                 .build();
+
+    }
+
+    public BaseResponseDto updateOwner(OwnerUpdateRequestDto dto) {
+        Optional<Long> id=jsonTokenManager.getIdByToken(dto.getToken());
+        if (id==null) throw new TokenNotEmptyException();
+
+        Owner owner=findById(id.get()).orElseThrow(()-> new OwnerNotFoundException());
+
+
+
+        owner.setName(dto.getName());
+        owner.setEmail(dto.getEmail());
+        owner.setSurname(dto.getSurname());
+
+        update(owner);
+        return BaseResponseDto.builder()
+                .message("ok")
+                .statusCode(200)
+                .build();
+    }
+
+    public BaseResponseDto deleteOwner(String token, long id) {
+        // silecek kişi. yetkili kişi.
+        Long yoneticiId=jsonTokenManager.getIdByToken(token).orElseThrow(()-> new WrongTokenException());
+        Owner owner=findById(yoneticiId).orElseThrow(()->new OwnerNotFoundException());
+        if (!owner.getRole().equals(Role.MANAGER)) throw new OwnerNotFoundException();
+
+        // silinecek kişi
+        deleteById(id);
+
+
+        return BaseResponseDto.builder().message("0").statusCode(200).build();
 
     }
 }

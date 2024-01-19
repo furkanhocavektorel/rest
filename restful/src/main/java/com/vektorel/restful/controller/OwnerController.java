@@ -2,6 +2,7 @@ package com.vektorel.restful.controller;
 
 import com.vektorel.restful.dto.request.GetOwnerByIdRequestDto;
 import com.vektorel.restful.dto.request.LoginRequestDto;
+import com.vektorel.restful.dto.request.OwnerUpdateRequestDto;
 import com.vektorel.restful.dto.request.SaveOwnerRequestDto;
 import com.vektorel.restful.dto.response.BaseResponseDto;
 import com.vektorel.restful.dto.response.GetAllOwnerResponseDto;
@@ -24,20 +25,23 @@ import java.util.List;
 public class OwnerController {
     @Autowired
     private OwnerService ownerService;
-    @PostMapping("/save")
+    @PostMapping("")
+    @PutMapping
+    @DeleteMapping
     public void save(@RequestBody SaveOwnerRequestDto dto){
-        ownerService.save(dto);
+        ownerService.ownerSave(dto);
     }
     /*
     2_ token talebi
      */
-    @GetMapping("/getAll/{token}")
+    @GetMapping("/{token}")
     public ResponseEntity<List<GetAllOwnerResponseDto>> getOwner(@PathVariable String token,@RequestParam String asd){
         return ResponseEntity.ok(ownerService.getAll(token));
     }
 
     public void deneme(){}
     @PostMapping("/getownerbyid")
+    @PreAuthorize("ADMIN")
     public ResponseEntity<OwnerResponseDto> getOwnerById(GetOwnerByIdRequestDto dto){
         return ResponseEntity.ok(ownerService.findById(dto));
     }
@@ -49,6 +53,23 @@ public class OwnerController {
     }
 
     public void deneme2(){}
+
+    @PutMapping("/")
+    public ResponseEntity<BaseResponseDto> updateOwner(@RequestBody OwnerUpdateRequestDto dto){
+
+        return ResponseEntity.ok(ownerService.updateOwner(dto));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<Owner>> getAll(){
+        return ResponseEntity.ok(ownerService.getAll());
+    }
+
+    @DeleteMapping("/{a}/{silinecekid}")
+    public ResponseEntity<BaseResponseDto> delete(@PathVariable("a") String token
+            ,@PathVariable("silinecekid") long id){
+        return ResponseEntity.ok(ownerService.deleteOwner(token,id));
+    }
 
 
 
